@@ -1,0 +1,111 @@
+
+<section class="section {{ section_class }}" id="{{ section_class }}">
+  <div class="section-heading">
+    <div class="section-heading-left">
+      <div class="section-icon">{{ section_icon }}</div>
+      <div>
+        <h2>{{ section_title }}</h2>
+        <p>{{ section_subtitle }}</p>
+      </div>
+    </div>
+
+    <span class="section-meta">
+      {% if page_obj.paginator %}
+        {{ page_obj.paginator.count }} results
+      {% else %}
+        {{ articles|length }} results
+      {% endif %}
+    </span>
+  </div>
+
+  <div class="card-grid">
+    {% for article in articles %}
+      <article class="result-card">
+        <div class="card-top">
+          <span class="badge {{ badge_class }}">
+            {{ article.source|default:article.content_type|default:"Research" }}
+          </span>
+
+          <span class="card-date">
+            {% if article.published_at %}
+              {{ article.published_at|date:"M d, Y" }}
+            {% elif article.published_date %}
+              {{ article.published_date }}
+            {% endif %}
+          </span>
+        </div>
+
+        <h3>
+          <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">
+            {{ article.title|default:"Untitled research" }}
+          </a>
+        </h3>
+
+        <p class="description">
+          {{ article.description|default:"Open the source to explore more details."|striptags|truncatechars:250 }}
+        </p>
+
+        {% if article.categories.all %}
+          <div class="chips">
+            {% for category in article.categories.all|slice:":3" %}
+              <span class="chip">{{ category.name }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="card-footer">
+          <span class="source">
+            {% if article.author %}
+              {{ article.author }}
+            {% else %}
+              {{ article.source|default:"Source link" }}
+            {% endif %}
+          </span>
+
+          <a class="read-link" href="{{ article.url }}" target="_blank" rel="noopener noreferrer">
+            Read more ↗
+          </a>
+        </div>
+      </article>
+    {% empty %}
+      <div class="empty">
+        <strong>{{ empty_title }}</strong>
+        <p>{{ empty_text }}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.paginator and page_obj.paginator.num_pages > 1 %}
+    <div class="pagination-wrap">
+      <span class="pagination-info">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        · {{ page_obj.paginator.count }} results
+      </span>
+
+      <nav class="pagination" aria-label="{{ section_title }} pagination">
+        {% if page_obj.has_previous %}
+          <a class="page-link"
+             href="?q={{ search_query|urlencode }}&{{ page_param }}={{ page_obj.previous_page_number }}#{{ section_class }}"
+             aria-label="Previous page">‹</a>
+        {% endif %}
+
+        {% for number in page_obj.paginator.page_range %}
+          {% if number == page_obj.number %}
+            <span class="page-current" aria-current="page">{{ number }}</span>
+          {% else %}
+            <a class="page-link"
+               href="?q={{ search_query|urlencode }}&{{ page_param }}={{ number }}#{{ section_class }}">
+              {{ number }}
+            </a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <a class="page-link"
+             href="?q={{ search_query|urlencode }}&{{ page_param }}={{ page_obj.next_page_number }}#{{ section_class }}"
+             aria-label="Next page">›</a>
+        {% endif %}
+      </nav>
+    </div>
+  {% endif %}
+</section>

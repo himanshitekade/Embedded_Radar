@@ -1,0 +1,349 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResearchRadar — Discover what's next</title>
+  <!-- ResearchRadar Favicon -->
+<link rel="icon" type="image/png"
+      href="{% static 'research_app/research_radar_favicon.png' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#20243a;--muted:#69738b;--line:#e4e8f1;--canvas:#f5f7fc;--paper:#fff;
+  --accent:#6264e8;--accent-dark:#4e50cb;--soft:#efedff;--shadow:0 8px 24px rgba(35,45,80,.06);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:82px}
+body{margin:0;background:var(--canvas);color:var(--ink);font:15px/1.55 "DM Sans",sans-serif}
+a{color:inherit}
+button,input{font:inherit}
+.topbar{height:64px;position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar-inner{width:94%;max-width:1600px;height:100%;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font:800 19px Manrope,sans-serif;letter-spacing:-.5px}
+.brand-mark{height:36px;width:36px;display:grid;place-items:center;border-radius:11px;color:#fff;background:linear-gradient(135deg,#6877f2,#8873e8);box-shadow:0 4px 10px #6877f226;font-size:19px}
+.brand em{font-style:normal;color:var(--accent)}
+.top-note{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#30b887;box-shadow:0 0 0 4px #30b88719}
+.page{width:94%;max-width:1600px;margin:24px auto 42px}
+.hero{position:relative;overflow:hidden;border:1px solid #e5e3fb;border-radius:22px;padding:27px 32px;background:linear-gradient(112deg,#f0efff 0%,#f7f5ff 48%,#eef9f5 100%);margin-bottom:18px}
+.hero:after{content:"";position:absolute;width:250px;height:250px;border:1px solid #b8b5f433;border-radius:50%;right:7%;top:-165px;box-shadow:0 0 0 27px #b8b5f41b,0 0 0 55px #b8b5f410;pointer-events:none}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6264c8;margin-bottom:8px}
+.hero h1{font:800 clamp(28px,2.5vw,36px)/1.2 Manrope,sans-serif;letter-spacing:-1.1px;margin:0;max-width:800px}
+.accent{color:var(--accent)}
+.hero p{color:#68718a;margin:9px 0 0;font-size:14.5px;max-width:720px}
+.hero-bottom{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:19px;position:relative;z-index:1}
+.search-form{display:flex;align-items:center;gap:10px;background:#fff;padding:5px 5px 5px 14px;border:1px solid #e2e4f0;border-radius:12px;box-shadow:0 5px 16px #393c7310;width:min(760px,100%)}
+.search-icon{color:#8589a4;font-size:18px}
+.search-form input{border:0;outline:0;min-width:0;flex:1;color:var(--ink);background:transparent;font-size:14px;padding:8px 0}
+.primary-btn{border:0;background:var(--accent);color:#fff;border-radius:9px;padding:10px 15px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s}
+.primary-btn:hover{background:var(--accent-dark)}
+.hero-caption{font-size:12px;color:#85869c;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:27px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 3px 14px #262b4c04}
+.stat-icon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:16px;flex-shrink:0;background:var(--soft);color:var(--accent)}
+.stat:nth-child(2) .stat-icon{background:#e4f7ef;color:#27815f}.stat:nth-child(3) .stat-icon{background:#f1eaff;color:#8660cb}.stat:nth-child(4) .stat-icon{background:#fff0e8;color:#b96b43}
+.stat-number{font:800 22px/1.15 Manrope,sans-serif;letter-spacing:-.5px}
+.stat-label{font-size:12px;color:var(--muted);margin-top:3px}
+.section{margin-top:28px;scroll-margin-top:80px}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:13px}
+.section-heading-left{display:flex;align-items:center;gap:11px}
+.section-icon{width:39px;height:39px;border-radius:12px;display:grid;place-items:center;font-size:17px;background:var(--soft);color:var(--accent)}
+.section-heading h2{font:800 19px/1.25 Manrope,sans-serif;letter-spacing:-.35px;margin:0}
+.section-heading p{font-size:12px;color:var(--muted);margin:3px 0 0}
+.section-meta{font-size:12px;color:#68718a;background:#fff;border:1px solid var(--line);border-radius:18px;padding:5px 10px;white-space:nowrap}
+.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.result-card{min-width:0;min-height:218px;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-top:3px solid #c8b7ff;border-radius:15px;padding:15px 16px 13px;box-shadow:0 3px 14px #20243a04;transition:transform .16s,box-shadow .16s;overflow:hidden}
+.result-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.news .result-card{border-top-color:#c8b7ff}.papers .result-card{border-top-color:#bca8ff}.projects .result-card{border-top-color:#a9dcca}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.badge{display:inline-flex;align-items:center;padding:5px 8px;border-radius:7px;background:#efebff;color:#6851b4;font-size:11px;font-weight:700;max-width:75%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-date{font-size:11px;color:#858ba0;white-space:nowrap}
+.result-card h3{font:700 16px/1.42 Manrope,sans-serif;letter-spacing:-.15px;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.result-card h3 a{text-decoration:none}.result-card h3 a:hover{color:var(--accent)}
+.description{font-size:14px;line-height:1.58;color:#606b82;margin:0 0 13px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.card-footer{margin-top:auto;padding-top:11px;border-top:1px solid #eff0f6;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.source{font-size:11px;color:#81889d;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:65%}
+.read-link{font-size:12px;font-weight:700;text-decoration:none;color:var(--accent);white-space:nowrap}.read-link:hover{text-decoration:underline}
+.pagination-wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:13px;padding:10px 13px;background:#fff;border:1px solid var(--line);border-radius:12px}
+.pagination-info{font-size:12px;color:var(--muted)}
+.pagination{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.page-link,.page-current{min-width:32px;height:32px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;background:#fff;text-decoration:none;color:#656b80;font-size:12px;font-weight:700}
+.page-link:hover{background:var(--soft);color:var(--accent);border-color:#d9dcff}.page-current{background:var(--accent);color:#fff;border-color:var(--accent)}
+.empty{grid-column:1/-1;background:#fff;border:1px dashed #dfe1ed;border-radius:15px;padding:28px;text-align:center;color:var(--muted)}
+.empty strong{display:block;font:700 16px Manrope,sans-serif;color:var(--ink);margin-bottom:5px}.empty p{font-size:13px;margin:0}
+.footer{padding:25px 0 5px;text-align:center;color:#9298aa;font-size:11px}
+.error-list{margin:0 0 16px;padding:12px 15px;background:#fff2f1;border:1px solid #f4d7d3;border-radius:10px;color:#a64d45;font-size:13px;overflow-wrap:anywhere}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:1050px){.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-bottom{align-items:flex-start;flex-direction:column}.hero-caption{white-space:normal}.stats{gap:9px}.stat{padding:12px}}
+@media(max-width:650px){.topbar{height:60px}.topbar-inner,.page{width:92%}.top-note{display:none}.page{margin-top:16px}.hero{padding:22px 18px;border-radius:18px}.hero h1{font-size:28px}.hero-bottom{margin-top:17px}.search-form{width:100%}.primary-btn{padding:10px 11px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:22px}.stat{padding:11px;gap:8px}.stat-icon{width:31px;height:31px}.stat-number{font-size:19px}.stat-label{font-size:11px}.section{margin-top:24px}.section-heading h2{font-size:17px}.section-icon{width:35px;height:35px}.card-grid{grid-template-columns:1fr;gap:10px}.result-card{min-height:0;padding:15px}.result-card h3{font-size:16px}.description{font-size:14px}.pagination-wrap{align-items:flex-start;flex-direction:column}.prompt-panel{padding:16px}.section-meta{font-size:11px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><div class="brand-mark">✳</div><span>Research<em>Radar</em></span></div>
+    <div class="top-note"><span class="live-dot"></span> Your window into what's next in tech</div>
+  </div>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <div class="eyebrow">✦ YOUR PERSONAL RESEARCH SPACE</div>
+    <h1>Curiosity leads to <span class="accent">discovery.</span></h1>
+    <p>Explore emerging ideas, breakthrough papers, and open-source projects across embedded systems, robotics, firmware, and electronics.</p>
+    <div class="hero-bottom">
+      <form class="search-form" method="get" action="">
+        <span class="search-icon">⌕</span>
+        <label class="sr-only" for="research-search">Search research</label>
+        <input id="research-search" type="search" name="q" value="{{ query|default:'' }}" placeholder="Search a topic, technology, or idea…">
+        <button class="primary-btn" type="submit">Explore results ↗</button>
+      </form>
+      <div class="hero-caption">A little inspiration for your next big idea.</div>
+    </div>
+  </section>
+
+  {% if errors %}
+  <div class="error-list">{% for error in errors %}<div>{{ error }}</div>{% endfor %}</div>
+  {% endif %}
+
+  <section class="stats" aria-label="Research overview">
+    <div class="stat">
+      <div class="stat-icon">⌘</div>
+      <div>
+        <div class="stat-number">{{ total_results|default:0 }}</div>
+        <div class="stat-label">Discoveries found</div>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">◉</div>
+      <div>
+        <div class="stat-number">3</div>
+        <div class="stat-label">Research sources</div>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">✧</div>
+      <div>
+        <div class="stat-number">4</div>
+        <div class="stat-label">Areas of exploration</div>
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">↗</div>
+      <div>
+        <div class="stat-number">Live</div>
+        <div class="stat-label">Research discovery</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. Research papers -->
+  <section class="section papers" id="papers">
+    <div class="section-heading">
+      <div class="section-heading-left">
+        <div class="section-icon">✧</div>
+        <div>
+          <h2>Research Papers</h2>
+          <p>Fresh thinking from the research community</p>
+        </div>
+      </div>
+      <span class="section-meta">{{ research_papers.paginator.count|default:0 }} results</span>
+    </div>
+    <div class="card-grid">
+      {% for article in research_papers %}
+      <article class="result-card">
+        <div class="card-top">
+          <span class="badge">{{ article.source|default:"arXiv Research Paper" }}</span>
+          <span class="card-date">
+            {% if article.published_at %}
+              {{ article.published_at|date:"M d, Y" }}
+            {% elif article.published_date %}
+              {{ article.published_date }}
+            {% endif %}
+          </span>
+        </div>
+        <h3>
+          <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">
+            {{ article.title }}
+          </a>
+        </h3>
+        <p class="description">
+          {{ article.description|default:"Open the paper to explore its abstract and findings."|striptags|truncatechars:320 }}
+        </p>
+        <div class="card-footer">
+          <span class="source">{{ article.source|default:"arXiv Research Paper" }}</span>
+          <a class="read-link" href="{{ article.url }}" target="_blank" rel="noopener noreferrer">Read paper ↗</a>
+        </div>
+      </article>
+      {% empty %}<div class="empty"><strong>No papers found</strong><p>Try a broader topic to discover related research.</p></div>{% endfor %}
+    </div>
+    {% if research_papers.paginator.num_pages > 1 %}
+    <div class="pagination-wrap">
+      <span class="pagination-info">Page {{ research_papers.number }} of {{ research_papers.paginator.num_pages }} · {{ research_papers.paginator.count }} results</span>
+      <nav class="pagination" aria-label="Research papers pagination">
+        {% if research_papers.has_previous %}
+          <a class="page-link"
+             href="?q={{ query|urlencode }}&amp;papers_page={{ research_papers.previous_page_number }}&amp;news_page={{ industry_news.number }}&amp;projects_page={{ github_projects.number }}#papers"
+             aria-label="Previous papers page">‹</a>
+        {% endif %}
+
+        {% for number in research_papers.paginator.page_range %}
+          {% if number == research_papers.number %}
+            <span class="page-current" aria-current="page">{{ number }}</span>
+          {% else %}
+            <a class="page-link"
+               href="?q={{ query|urlencode }}&amp;papers_page={{ number }}&amp;news_page={{ industry_news.number }}&amp;projects_page={{ github_projects.number }}#papers">{{ number }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if research_papers.has_next %}
+          <a class="page-link"
+             href="?q={{ query|urlencode }}&amp;papers_page={{ research_papers.next_page_number }}&amp;news_page={{ industry_news.number }}&amp;projects_page={{ github_projects.number }}#papers"
+             aria-label="Next papers page">›</a>
+        {% endif %}
+      </nav>
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- 2. Industry news -->
+  <section class="section news" id="news">
+    <div class="section-heading">
+      <div class="section-heading-left">
+        <div class="section-icon">◌</div>
+        <div>
+          <h2>Industry &amp; Tech News</h2>
+          <p>Signals, launches, and ideas from across the industry</p>
+        </div>
+      </div>
+      <span class="section-meta">{{ industry_news.paginator.count|default:0 }} results</span>
+    </div>
+    <div class="card-grid">
+      {% for article in industry_news %}
+      <article class="result-card">
+        <div class="card-top">
+          <span class="badge">{{ article.source|default:"Industry News & Articles" }}</span>
+          <span class="card-date">
+            {% if article.published_at %}
+              {{ article.published_at|date:"M d, Y" }}
+            {% elif article.published_date %}
+              {{ article.published_date }}
+            {% endif %}
+          </span>
+        </div>
+        <h3>
+          <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">
+            {{ article.title }}
+          </a>
+        </h3>
+        <p class="description">
+          {{ article.description|default:"Open the source to explore more details."|striptags|truncatechars:320 }}
+        </p>
+        <div class="card-footer">
+          <span class="source">{{ article.source|default:"Industry News & Articles" }}</span>
+          <a class="read-link" href="{{ article.url }}" target="_blank" rel="noopener noreferrer">Read article ↗</a>
+        </div>
+      </article>
+      {% empty %}<div class="empty"><strong>No news to show yet</strong><p>Try a broader topic or update your research interests.</p></div>{% endfor %}
+    </div>
+    {% if industry_news.paginator.num_pages > 1 %}
+    <div class="pagination-wrap">
+      <span class="pagination-info">Page {{ industry_news.number }} of {{ industry_news.paginator.num_pages }} · {{ industry_news.paginator.count }} results</span>
+      <nav class="pagination" aria-label="News pagination">
+        {% if industry_news.has_previous %}
+          <a class="page-link"
+             href="?q={{ query|urlencode }}&amp;news_page={{ industry_news.previous_page_number }}&amp;papers_page={{ research_papers.number }}&amp;projects_page={{ github_projects.number }}#news"
+             aria-label="Previous news page">‹</a>
+        {% endif %}
+
+        {% for number in industry_news.paginator.page_range %}
+          {% if number == industry_news.number %}
+            <span class="page-current" aria-current="page">{{ number }}</span>
+          {% else %}
+            <a class="page-link"
+               href="?q={{ query|urlencode }}&amp;news_page={{ number }}&amp;papers_page={{ research_papers.number }}&amp;projects_page={{ github_projects.number }}#news">{{ number }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if industry_news.has_next %}
+          <a class="page-link"
+             href="?q={{ query|urlencode }}&amp;news_page={{ industry_news.next_page_number }}&amp;papers_page={{ research_papers.number }}&amp;projects_page={{ github_projects.number }}#news"
+             aria-label="Next news page">›</a>
+        {% endif %}
+      </nav>
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- 3. GitHub projects -->
+  <section class="section projects" id="projects">
+    <div class="section-heading">
+      <div class="section-heading-left">
+        <div class="section-icon">⌘</div>
+        <div>
+          <h2>GitHub Projects</h2>
+          <p>Useful tools, experiments, and open-source builds</p>
+        </div>
+      </div>
+      <span class="section-meta">{{ github_projects.paginator.count|default:0 }} results</span>
+    </div>
+    <div class="card-grid">
+      {% for article in github_projects %}
+      <article class="result-card">
+        <div class="card-top">
+          <span class="badge">{{ article.source|default:"GitHub Repository" }}</span>
+          <span class="card-date">
+            {% if article.stars %}★ {{ article.stars }} stars{% endif %}
+          </span>
+        </div>
+        <h3>
+          <a href="{{ article.url }}" target="_blank" rel="noopener noreferrer">
+            {{ article.title }}
+          </a>
+        </h3>
+        <p class="description">
+          {{ article.description|default:"Open the repository to explore its code and documentation."|striptags|truncatechars:320 }}
+        </p>
+        <div class="card-footer">
+          <span class="source">{{ article.source|default:"GitHub Repository" }}</span>
+          <a class="read-link" href="{{ article.url }}" target="_blank" rel="noopener noreferrer">View project ↗</a>
+        </div>
+      </article>
+      {% empty %}<div class="empty"><strong>No projects found</strong><p>Explore a different technology or keyword. GitHub may also be temporarily rate-limited.</p></div>{% endfor %}
+    </div>
+    {% if github_projects.paginator.num_pages > 1 %}
+    <div class="pagination-wrap">
+      <span class="pagination-info">Page {{ github_projects.number }} of {{ github_projects.paginator.num_pages }} · {{ github_projects.paginator.count }} results</span>
+      <nav class="pagination" aria-label="GitHub projects pagination">
+        {% if github_projects.has_previous %}
+          <a class="page-link"
+             href="?q={{ query|urlencode }}&amp;projects_page={{ github_projects.previous_page_number }}&amp;papers_page={{ research_papers.number }}&amp;news_page={{ industry_news.number }}#projects"
+             aria-label="Previous projects page">‹</a>
+        {% endif %}
+
+        {% for number in github_projects.paginator.page_range %}
+          {% if number == github_projects.number %}
+            <span class="page-current" aria-current="page">{{ number }}</span>
+          {% else %}
+            <a class="page-link"
+               href="?q={{ query|urlencode }}&amp;projects_page={{ number }}&amp;papers_page={{ research_papers.number }}&amp;news_page={{ industry_news.number }}#projects">{{ number }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if github_projects.has_next %}
+          <a class="page-link"
+             href="?q={{ query|urlencode }}&amp;projects_page={{ github_projects.next_page_number }}&amp;papers_page={{ research_papers.number }}&amp;news_page={{ industry_news.number }}#projects"
+             aria-label="Next projects page">›</a>
+        {% endif %}
+      </nav>
+    </div>
+    {% endif %}
+  </section>
+  <footer class="footer">Made for the endlessly curious · ResearchRadar</footer>
+</main>
+</body>
+</html>
